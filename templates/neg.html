@@ -1,0 +1,18 @@
+{% extends "base.html"%}
+{% block content %}
+
+<div class="jumbotron">
+    <img src="/static/yes_mark.png" alt="Negitive Result">
+    <p>Our model prediction is a negitive one. <br>
+      Looks like there is nothing you need to worry right now.<br>
+      <br>
+      <br>
+      <a href="{{url_for('fastinput')}}">&lt&ltTry Again</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="{{url_for('aboutsensormodel')}}">What does it mean?</a>
+      <br>
+    </p> 
+
+</div>
+
+{% endblock %}

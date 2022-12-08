@@ -1,0 +1,18 @@
+{% extends "base.html"%}
+{% block content %}
+
+<div class="jumbotron">
+    <img src="/static/question_mark.png" alt="Positive Result">
+    <p>Our model prediction is a positive one. <br>
+      Looks like there might be some issue. <br>
+      <br>
+      <br>
+      <a href="{{url_for('fastinput')}}">&lt&ltTry Again</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="{{url_for('explanation')}}">What does it mean?</a>
+      <br>
+    </p>
+
+</div>
+
+{% endblock %}

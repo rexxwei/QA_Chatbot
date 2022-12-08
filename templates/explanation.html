@@ -1,0 +1,25 @@
+{% extends "base.html"%}
+{% block content %}
+
+<div class="jumbotron">
+    <h3>Should I worry?</h3><br>
+    <img src="/static/relax.jpg" alt="Don't be nevous">
+    <br>
+    <br>
+    <p>Please note, this is not an accurate medical diagnosis tool.<br>
+      We just use machine learning technique to make a quick evaluation.<br>
+      If you feel like there is issue with your health, please visit your<br>
+      doctor to conduct a thorough medical examination.<br>
+      <br>
+      <br>
+      <a href="{{url_for('fastinput')}}">&lt&lt Back to predict</a> 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="{{url_for('aboutmanualmodel')}}">how it works</a>
+      <br>
+    </p> 
+
+</div>
+
+{% endblock %}

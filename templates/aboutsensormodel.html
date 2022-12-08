@@ -1,0 +1,28 @@
+{% extends "base.html"%}
+{% block content %}
+
+<div class="jumbotron">
+
+    <h1 style="color:black;">About Sensor Data Model</h1>
+    <br>
+    <p>
+    <h2>How The Model Works</h2><br>
+    In this mode, A Machine Learning model (Sensor Model) will give an evaluated score of the task using a file (contained the <br>
+    data/reading from seneors all over the house). For demo purpose, the model used a file on the server to make prediction.<br>
+    Our model use this data to train and test the model performance. In the evaluate phase, the model achieved 60% accuracy.<br>
+    <b>The prediction is not an medical diagnosis, it just remind user to pay attention to health status.</b><br>
+    </p>
+    <br>
+
+    <p>
+    <h2>The Algorithm</h2><br>
+    We use XGBoost model to implement the machine learning model.<br>
+    XGBoost is a decision-tree-based ensemble Machine Learning algorithm that uses a gradient boosting framework. <br>
+    In prediction problems involving unstructured data (images, text, etc.), artificial Neural Networks tend to <br>
+    outperform all other algorithms. However, when it comes to small-to-medium data, decision tree based algorithms <br>
+    are considered best-in-class right now. 
+    </p>
+
+</div>
+
+{% endblock %}

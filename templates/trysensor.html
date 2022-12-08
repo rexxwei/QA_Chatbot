@@ -1,0 +1,24 @@
+{% extends "base.html"%} {% block content %}
+
+<div class="jumbotron">
+  <h2>Sensor Data Model demo</h2>
+  <br />
+  <p>
+    Please upload a file for prediction. <br />
+    <br />
+    <form action="/sensorpred">
+        <input type="file" id="myFile" name="filename">
+        <input type="submit">
+        <!--        <button type="button">&nbsp;Browse&nbsp;</button> &nbsp;&nbsp;-->
+        <!--        <button type="submit" >&nbsp;Predict&nbsp;</button>-->
+    </form>
+  </p>
+  <p>
+    Please note, this is not a accurate diagnosis. <br />
+    We just use machine learning technique to make a quick evaluation.<br />
+    If you feel like there is issue with your health, please visit your<br />
+    doctor to conduct a thorough medical examination.
+  </p>
+</div>
+
+{% endblock %}
