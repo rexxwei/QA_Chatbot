@@ -1,0 +1,39 @@
+{% extends "base.html"%} {% block content %}
+
+<div class="jumbotron">
+  <h2>Simple Q&A ChatBot</h2>
+  <img src="/static/chatbots.jpg" alt="ChatBot" />
+  <br />
+  <br />
+  <form name="storyForm" action="/predict" method="POST">
+    A story<br />
+    (e.g.<br />
+    John left kitchen. Sandra dropped the football in garden.)<br />
+    <textarea rows="3" cols="50" id="story" name="story"></textarea>
+    <br /><br />
+    The question <br />
+    (e.g. Is football in garden?)<br />
+    <textarea rows="2" cols="50" id="question" name="question"></textarea>
+    <br /><br />
+    <label for="cars">Provide a Correct Answer:</label>
+    <select name="answer" id="answer">
+      <option value="noip">&nbsp;</option>
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+    <br />
+    <input type="submit" value="Submit" />
+  </form>
+  <br />
+  <p>
+    [Choose below words for better experiece]<br />
+    Daniel, John, Mary, Sandra, apple, milk, office,<br />
+    took, travelled, went, left, put, discarded, dropped, <br />
+    Is, in, to, up, back, down, the, there,<br />
+    grabbed, got, journeyed, moved, picked,<br />
+    football, garden, hallway, bathroom, bedroom, kitchen, <br />
+  </p>
+  <br />
+  <br />
+</div>
+{% endblock %}

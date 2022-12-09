@@ -1,6 +1,3 @@
-
-from flask import Flask, render_template, request
-import pandas as pd
 import tensorflow
 from tensorflow import keras
 import pickle
@@ -14,9 +11,7 @@ from keras_preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
 
 
-import flask
-app = Flask(__name__)
-
+# def vectorize_stories(data, word_index=tokenizer.word_index, max_story_len=max_story_len,max_question_len=max_question_len):
 def vectorize_stories(data, word_index, max_story_len, max_question_len):
     '''
     INPUT: 
@@ -52,6 +47,7 @@ def vectorize_stories(data, word_index, max_story_len, max_question_len):
         y = np.zeros(len(word_index) + 1)
         
         # Now that y is all zeros and we know its just Yes/No , we can use numpy logic to create this assignment
+        #
         y[word_index[answer]] = 1
         
         # Append each set of story,query, and answer to their respective holding lists
@@ -65,31 +61,10 @@ def vectorize_stories(data, word_index, max_story_len, max_question_len):
     return (pad_sequences(X, maxlen=max_story_len),pad_sequences(Xq, maxlen=max_question_len), np.array(Y))
 
 
-@app.route('/')
-def index():
-    return render_template('trybot.html')
-    # return render_template('index.html')
+if __name__ == '__main__':
 
-@app.route('/fastinput')
-def fastinput():
-    return render_template('fastinput.html')
-
-
-@app.route('/yes')
-def pos():
-    return render_template('yes.html')
-
-@app.route('/no')
-def neg():
-    return render_template('no.html')
-
-@app.route('/predict', methods=['POST'])
-def predict():
-
-    # get the input content
-    input_cont = request.form.to_dict()
-    # print(input_cont)
-
+    # import sklearn
+    # print(sklearn.__version__)
     vocab = {'.', '?', 'Daniel', 'Is', 'John', 'Mary', 'Sandra', 'apple', 'back', 'bathroom', 'bedroom',
             'discarded', 'down', 'dropped', 'football', 'garden', 'got', 'grabbed', 'hallway',
             'in', 'journeyed', 'kitchen', 'left', 'milk', 'moved', 'no', 'office', 'picked', 'put', 
@@ -146,32 +121,18 @@ def predict():
     model.compile(optimizer='rmsprop', loss='categorical_crossentropy',
                 metrics=['accuracy'])
 
+
     # load save model
     filename = 'chatbot_120_epochs.h5'
     model.load_weights(filename)
+    # pred_results = model.predict(([inputs_test, queries_test]))
 
     # input for prediction
-    # my_story = "John left the kitchen . Sandra dropped the football in the garden ."
-    story =  input_cont['story']
-    story =  story.replace(".", " .")
-    # my_question = "Is the football in the garden ?"
-    question = input_cont['question']
-    question = question.replace("?", " ?")
-
-    if input_cont['answer'] == 'noip':
-        answer = 'yes'
-    else:
-        answer = input_cont['answer']
-
-    # print("my_story: ")
-    # print(my_story)
-    # print("my_question: ")
-    # print(my_question)
-
-    data = [(story.split(), question.split(), answer)]
-    # mydata = [(my_story.split(),my_question.split(),'no')]
-    my_story,my_ques,my_ans = vectorize_stories(data, word_index, max_story_len, max_question_len)
-    pred = model.predict(([my_story, my_ques]))
+    my_story = "John left the kitchen . Sandra dropped the football in the garden ."
+    my_question = "Is the football in the garden ?"
+    mydata = [(my_story.split(),my_question.split(),'yes')]
+    my_story,my_ques,my_ans = vectorize_stories(mydata, word_index, max_story_len, max_question_len)
+    pred = model.predict(([ my_story, my_ques]))
 
     #Generate prediction from model
     val_max = np.argmax(pred[0])
@@ -180,25 +141,5 @@ def predict():
         if val == val_max:
             k = key
 
-    print(str((pred[0][2] > pred[0][9])))
-    # print("Predicted answer is: ", k)
-    # print("Probability was: ", pred[0][val_max])
-
-    print(tokenizer.word_index['yes'])
-    print(tokenizer.word_index['no'])
-    # the possibility of yes < no
-    if str((pred[0][tokenizer.word_index['yes']] > pred[0][tokenizer.word_index['no']])) == 'True':
-        return render_template('yes.html')
-    else:
-        return render_template('no.html')
-
-    return render_template('err.html')
-
-
-@app.route('/sensorpred')
-def sensorpred():
-    return render_template('err.html')
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    print("Predicted answer is: ", k)
+    print("Probability of certainty was: ", pred[0][val_max])
