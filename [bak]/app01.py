@@ -1,3 +1,6 @@
+
+from flask import Flask, render_template, request
+import pandas as pd
 import tensorflow
 from tensorflow import keras
 import pickle
@@ -11,7 +14,9 @@ from keras_preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
 
 
-# def vectorize_stories(data, word_index=tokenizer.word_index, max_story_len=max_story_len,max_question_len=max_question_len):
+import flask
+app = Flask(__name__)
+
 def vectorize_stories(data, word_index, max_story_len, max_question_len):
     '''
     INPUT: 
@@ -47,7 +52,6 @@ def vectorize_stories(data, word_index, max_story_len, max_question_len):
         y = np.zeros(len(word_index) + 1)
         
         # Now that y is all zeros and we know its just Yes/No , we can use numpy logic to create this assignment
-        #
         y[word_index[answer]] = 1
         
         # Append each set of story,query, and answer to their respective holding lists
@@ -61,10 +65,30 @@ def vectorize_stories(data, word_index, max_story_len, max_question_len):
     return (pad_sequences(X, maxlen=max_story_len),pad_sequences(Xq, maxlen=max_question_len), np.array(Y))
 
 
-if __name__ == '__main__':
+@app.route('/')
+def index():
+    return render_template('trybot.html')
+    # return render_template('index.html')
 
-    # import sklearn
-    # print(sklearn.__version__)
+@app.route('/fastinput')
+def fastinput():
+    return render_template('fastinput.html')
+
+
+@app.route('/yes')
+def pos():
+    return render_template('yes.html')
+
+@app.route('/no')
+def neg():
+    return render_template('no.html')
+
+@app.route('/predict', methods=['POST'])
+def predict():
+
+    # get the input content
+    input_cont = request.form.to_dict()
+
     vocab = {'.', '?', 'Daniel', 'Is', 'John', 'Mary', 'Sandra', 'apple', 'back', 'bathroom', 'bedroom',
             'discarded', 'down', 'dropped', 'football', 'garden', 'got', 'grabbed', 'hallway',
             'in', 'journeyed', 'kitchen', 'left', 'milk', 'moved', 'no', 'office', 'picked', 'put', 
@@ -104,8 +128,8 @@ if __name__ == '__main__':
     match = dot([input_encoded_m, question_encoded], axes=(2, 2))
     match = Activation('softmax')(match)
     # add the match matrix with the second input vector sequence
-    response = add([match, input_encoded_c])  # (samples, story_maxlen, query_maxlen)
-    response = Permute((2, 1))(response)  # (samples, query_maxlen, story_maxlen)
+    response = add([match, input_encoded_c])
+    response = Permute((2, 1))(response)
     # concatenate the match matrix with the question vector sequence
     answer = concatenate([response, question_encoded])
     # Reduce with RNN (LSTM)
@@ -121,18 +145,27 @@ if __name__ == '__main__':
     model.compile(optimizer='rmsprop', loss='categorical_crossentropy',
                 metrics=['accuracy'])
 
-
     # load save model
     filename = 'chatbot_120_epochs.h5'
     model.load_weights(filename)
-    # pred_results = model.predict(([inputs_test, queries_test]))
 
     # input for prediction
-    my_story = "John left the kitchen . Sandra dropped the football in the garden ."
-    my_question = "Is the football in the garden ?"
-    mydata = [(my_story.split(),my_question.split(),'yes')]
-    my_story,my_ques,my_ans = vectorize_stories(mydata, word_index, max_story_len, max_question_len)
-    pred = model.predict(([ my_story, my_ques]))
+    # my_story = "John left the kitchen . Sandra dropped the football in the garden ."
+    story =  input_cont['story']
+    story =  story.replace(".", " .")
+    # my_question = "Is the football in the garden ?"
+    question = input_cont['question']
+    question = question.replace("?", " ?")
+
+    if input_cont['answer'] == 'noip':
+        answer = 'yes'
+    else:
+        answer = input_cont['answer']
+
+    data = [(story.split(), question.split(), answer)]
+    # mydata = [(my_story.split(),my_question.split(),'no')]
+    my_story,my_ques,my_ans = vectorize_stories(data, word_index, max_story_len, max_question_len)
+    pred = model.predict(([my_story, my_ques]))
 
     #Generate prediction from model
     val_max = np.argmax(pred[0])
@@ -141,5 +174,20 @@ if __name__ == '__main__':
         if val == val_max:
             k = key
 
-    print("Predicted answer is: ", k)
-    print("Probability of certainty was: ", pred[0][val_max])
+    prob_yes = pred[0][tokenizer.word_index['yes']]
+    prob_no = pred[0][tokenizer.word_index['no']]
+    print(str( prob_yes > prob_no))
+    # print("Predicted answer is: ", k)
+    # print("Probability was: ", pred[0][val_max])
+
+    # if possibility of yes > no
+    if (prob_yes > prob_no):
+        return render_template('yes.html', conf = round(pred[0][val_max]*100, 2))
+    else:
+        return render_template('no.html', conf = round(pred[0][val_max]*100, 2))
+
+    return render_template('err.html')
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080)

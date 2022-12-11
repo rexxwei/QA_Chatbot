@@ -1,0 +1,1 @@
+{'football', 'grabbed', 'down', 'picked', 'discarded', 'bathroom', 'took', 'back', 'Is', 'in', 'put', 'went', 'apple', 'Mary', 'Daniel', 'left', 'bedroom', 'hallway', 'up', 'yes', '.', 'Sandra', 'dropped', '?', 'the', 'kitchen', 'travelled', 'to', 'journeyed', 'office', 'got', 'there', 'John', 'no', 'garden', 'moved', 'milk'}

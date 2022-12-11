@@ -1,5 +1,3 @@
-Daniel went there. Mary is in the kitchen.
-Is Mary there?
 
 Daniel went there. Mary is in kitchen.
 Is Mary in kitchen?
@@ -11,5 +9,11 @@ Daniel went there. Mary is in kitchen.
 Is Daniel there?
 
 Daniel left the garden. John went to kitchen.
-Is John in garden? 
+Is John in garden?
 (No)
+
+Daniel went to garden. Mary is in hallway.
+Is Mary in kitchen?
+(no)
+Is Daniel in garden?
+(yes)
