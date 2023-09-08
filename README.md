@@ -49,4 +49,5 @@ Hope a bigger size vocabulary dataset will be available soon.<br>
 
 Demo
 =========
+(demo might need a little bit more time to display)
 <img src="demo.gif" width="50%" />
